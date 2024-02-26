@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    label{
+font-weight:bold;
+font-size:35px;
+position:absolute;
+}
+a{
+    color:Peru;
+text-decoration:None;
+}
+</style>
+<body style="font-family:sans-serif;background-color:Bisque;">
+    <h2 style="position: absolute; top: 0px; color:Peru;"><a href="index.html">Coffee Order </br>System</a></h2>
+    <h2 style="position: absolute; top: 0px; right:25px;"><a style="color:Black;" href="stats.html" >Order Status</a></h2>
+    <label style="top:30%; left:40%;">Order Placed:</label>
+    <label id="id" style="left:40%; top:40%;">Order ID: </label>
+    <label id="description" style="left:40%; top:50%;"> </label>
+    <label id="cost" style="left:40%; top:60%;">Total: </label>
+</body>
+<script>
+let id = document.getElementById('id');
+id.innerHTML = "Total: "+ (Math.floor(Math.random() * 10) + 1);
+let description=document.getElementById('description');
+description.innerHTML = "Drink Description Goes Here";
+let cost = document.getElementById('cost');
+cost.innerHTML= (Math.floor(Math.random() * 10)) + ".99";
+</script>
+</html>

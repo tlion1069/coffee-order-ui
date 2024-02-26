@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+a{
+    color:Peru;
+text-decoration:None;
+}
+button{
+position:absolute;
+font-size:30px;
+padding:50px;
+border-radius:10px;
+background-color:BurlyWood;
+border-color:Bisque;
+font-weight:bold;
+width:300px;
+}
+</style>
+<body style="font-family:sans-serif;background-color:Bisque;">
+<h2 style="position: absolute; top: 0px; color:Peru;"><a href="index.html">Coffee Order </br>System</a></h2>
+<h2 style="position: absolute; top: 0px; right:25px;"><a style="color:Black;" href="stats.html" >Order Status</a></h2>
+<h2 style="position:absolute;left:50%; top:30%; font-size:30px;">Select a Beverage</h2>
+<button id="choice1" style="top:40%; left:70%;" onclick="submit(1)">Dark Roast</button>
+<button id="choice2" style="top:70%; left:70%;" onclick="submit(2)">Espresso</button>
+<button id="choice3" style="top:40%; left:30%" onclick="submit(3)">House Blend</button>
+<button id="choice4" style="top:70%; left:30%;" onclick="submit(4)">Decaf</button>
+</body>
+<script>
+    function submit(id){
+        let beverage = document.getElementById("choice" + id).innerHTML;
+        location.href = "add.html?beverage=" + beverage;
+    }
+</script>
+</html>
