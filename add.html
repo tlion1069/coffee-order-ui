@@ -11,89 +11,117 @@ a{
 text-decoration:None;
 }
 button{
-position:absolute;
 font-size:30px;
-padding:50px;
 border-radius:10px;
 background-color:BurlyWood;
 border-color:Bisque;
 font-weight:bold;
 width:200px;
+height:fit-content;
+margin: 0.5rem 1rem;
 }
-div.square{
+.square{
 border: solid 5px Black;
-width: 250px;
-height:500px;
-position:absolute;
+position:fixed;
 right:5%;
 top:20%;
 border-radius:10px;
+display:flex;
+align-items: center;
+flex-direction: column;
+justify-content: center;
 }
 label{
 color:Peru;
 font-weight:bold;
 font-size:35px;
-position:absolute;
 right:9%;
 top:23%;
 }
+.button{
+   flex-direction: column;
+   display: flex;
+   align-items: center;
+}
+.choices{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.conds{
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    position: fixed;
+    top:40%;
+    left:20%;
+    width: 200px;
+}
 </style>
 <body style="font-family:sans-serif;background-color:Bisque;">
-<h2 style="position: absolute; top: 0px; color:Peru;"><a href="index.html">Coffee Order</br>System</a></h2>
+<h2 style="position: absolute; top: 0px; left:20px; color:Peru;"><a href="index.html">Coffee Order</br>System</a></h2>
 <h2 style="position: absolute; top: 0px; right:25px; color:Black;"><a style="color:Black;" href="stats.html" >Order Status</a></h2>
+
+
+<div class="square">
+    <label>My Order</label>
+    <div class="button">
+        <button id="beverage" onclick="goBack()">Selected Beverage</button>
+        <div class="choices" id="addStuff">
+
+        </div>
+        <button style="margin-top: 30px;" id="result" onclick="confirm()">Confirm Order</button>
+    </div>
+</div>
 <h2 style="position:absolute;left:27%; top:25%; font-size:30px;">Add the condiments</h2>
-<button id="option0" style="top:40%; left:40%;" onclick="add(0)">Mocha</button>
-<button id="option1" style="top:60%; left:40%;" onclick="add(1)">Whip</button>
-<button id="option2" style="top:40%; left:20%;" onclick="add(2)">Milk</button>
-<button id="option3" style="top:60%; left:20%;" onclick="add(3)">Soy</button>
-<div class="square"></div>
-<button id="beverage"style="padding:0px; right:7%; top:30%; font-size:22px;" onclick="goBack()">Selected Beverage</button>
-<button id="choice0" style="padding:0px; right:7%; top:37%; font-size:28px;" onclick="remove(0)">condiment 1</button>
-<button id="choice1" style="padding:0px; right:7%; top:44%; font-size:28px;" onclick="remove(1)" onclick="remove(1)">condiment 2</button>
-<button id="choice2" style="padding:0px; right:7%; top:51%; font-size:28px;" onclick="remove(2)">condiment 3</button>
-<button id="choice3" style="padding:0px; right:7%; top:58%; font-size:28px;" onclick="remove(3)">condiment 4</button>
-<button id="result" style="padding:0px; right:6%; top:70%; width:230px;" onclick="confirm()">Confirm Order</button>
-<label>My Order</label>
+<div class="conds">
+    <button id="option0" style="top:40%; left:40%;padding:40px;" onclick="add(0)">Mocha</button>
+    <button id="option1" style="top:60%; left:40%;padding:40px;" onclick="add(1)">Whip</button>
+</div>
+<div class="conds" style="left:40%;">
+    <button id="option2" style="top:40%; left:20%;padding:40px;" onclick="add(2)">Milk</button>
+    <button id="option3" style="top:60%; left:20%; padding:40px;" onclick="add(3)">Soy</button>
+</div>
 </body>
 <script>
         let url = new URLSearchParams(window.location.search);
         var beverage = url.get('beverage');
         let button = document.getElementById("beverage");
-        button.innerHTML = beverage;
-        
+        button.innerText = beverage;
     let orders=[];
     function add(id){
-        if(orders.length <=4){
-        orders.push(document.getElementById("option" + id).innerText);
-        for(order in orders){
-            cond = document.getElementById("choice" + order)
-            cond.innerText = orders[order];
-        }
-        }
+        orders.push(id);
+        addAllButtons();
     }
     function remove(id){
-        if(orders[id]){
-        orders.splice(id, id);
-        if(id == 0){orders.shift();}
-        for(order in orders){
-            cond = document.getElementById("choice" + order)
-            cond.innerHTML = orders[order];
+        if(id == 0){
+            orders.shift();
         }
-        for(index of Array(4).keys()){
-            if(!orders[index]){
-                cond = document.getElementById("choice" + index);
-                cond.innerText = "condiment " + (index + 1);
-            }
+        else{
+        orders.splice(id, 1);
         }
+        addAllButtons();
     }
+    function addAllButtons(){
+        document.getElementById("addStuff").innerHTML = "";
+        for(order in orders){
+        let button = document.createElement("button");
+        button.innerText = document.getElementById("option" + orders[order]).innerText;
+        button.setAttribute("onclick", "remove(" + order + ")");
+        document.getElementById("addStuff").appendChild(button);
+        }
     }
     function goBack(){
         location.href = "order.html";
     }
     async function confirm(){
+        let actualConds = [];
+        for(item of orders){
+            actualConds.push(document.getElementById("option" + item).innerText);
+        }
         let orderData = {
             beverage: beverage,
-            condiments: orders
+            condiments: actualConds
         };
         let request = {
             method: "POST",
@@ -102,16 +130,14 @@ top:23%;
             },
             body: JSON.stringify(orderData)
         };
-        location.href = "result.html";
-        /*
-        let response = await fetch("localhost:8080/orders", request);
+        
+        let response = await fetch("https://hw2-latest-q1ko.onrender.com/orders", request);
         if(response.status == 201){
-            let receipt = response.json();
-            location.href = "result.html?id=" + receipt.id +"&cost=" + receipt.cost + "&description=" + receipt.description;
+            location.href = "result.html";
         }
         else {
             alert("Something went wrong. Please try again later.");
-        } */
+        }
     }
 </script>
 </html>

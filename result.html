@@ -9,27 +9,58 @@
     label{
 font-weight:bold;
 font-size:35px;
-position:absolute;
 }
 a{
     color:Peru;
 text-decoration:None;
 }
+.display{
+    flex-direction: column;
+    display: flex;
+    align-items: left;
+    position: fixed;
+    top:40%;
+    left:35%;
+    width: fit-content;
+    justify-content: center;
+}
 </style>
 <body style="font-family:sans-serif;background-color:Bisque;">
     <h2 style="position: absolute; top: 0px; color:Peru;"><a href="index.html">Coffee Order </br>System</a></h2>
     <h2 style="position: absolute; top: 0px; right:25px;"><a style="color:Black;" href="stats.html" >Order Status</a></h2>
-    <label style="top:30%; left:40%;">Order Placed:</label>
-    <label id="id" style="left:40%; top:40%;">Order ID: </label>
-    <label id="description" style="left:40%; top:50%;"> </label>
-    <label id="cost" style="left:40%; top:60%;">Total: </label>
+    <label style="position:absolute; top:30%; left:35%;">Order Placed:</label>
+    <div class="display">
+    <label id="id">Order ID: </label>
+    <br>
+    <label id="description"> </label>
+    <br>
+    <label id="cost">Total: </label>
+</div>
 </body>
 <script>
-let id = document.getElementById('id');
-id.innerHTML = "Total: "+ (Math.floor(Math.random() * 10) + 1);
-let description=document.getElementById('description');
-description.innerHTML = "Drink Description Goes Here";
-let cost = document.getElementById('cost');
-cost.innerHTML= (Math.floor(Math.random() * 10)) + ".99";
+    let host="https://hw2-latest-q1ko.onrender.com/orders/get";
+    getOrder();
+    async function get(){
+        return fetch(host)
+        .then(response => response.json())
+        .catch(error => {
+          console.log(error);
+          alert("Something went wrong!");
+          return null;
+    }
+        )
+}
+    async function getOrder(){
+        
+        let beverage= await get();
+        console.log("1");
+        let id = document.getElementById('id');
+        id.innerHTML = "Order ID: " + beverage.id;
+        let description=document.getElementById('description');
+        description.innerHTML = beverage.description;
+        let cost = document.getElementById('cost');
+        cost.innerHTML= "Total: " + beverage.cost;
+    }
+
 </script>
 </html>
